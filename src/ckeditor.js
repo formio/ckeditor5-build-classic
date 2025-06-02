@@ -4,38 +4,45 @@
  */
 
 // The editor creator to use.
-import ClassicEditorBase from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
-import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
-import UploadAdapter from '@ckeditor/ckeditor5-adapter-ckfinder/src/uploadadapter';
-import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat';
-import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
-import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
-import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
-import CKFinder from '@ckeditor/ckeditor5-ckfinder/src/ckfinder';
-import EasyImage from '@ckeditor/ckeditor5-easy-image/src/easyimage';
-import Heading from '@ckeditor/ckeditor5-heading/src/heading';
-import Image from '@ckeditor/ckeditor5-image/src/image';
-import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption';
-import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle';
-import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar';
-import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
-import ImageResize from '@ckeditor/ckeditor5-image/src/imageresize';
-import Indent from '@ckeditor/ckeditor5-indent/src/indent';
-import IndentBlock from '@ckeditor/ckeditor5-indent/src/indentblock';
-import Link from '@ckeditor/ckeditor5-link/src/link';
-import './plugins/image/imageupload/imageuploadui';
-import List from '@ckeditor/ckeditor5-list/src/list';
-import MediaEmbed from '@ckeditor/ckeditor5-media-embed/src/mediaembed';
-import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
-import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
-import Table from '@ckeditor/ckeditor5-table/src/table';
-import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
-import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
-import Font from '@ckeditor/ckeditor5-font/src/font';
-import FontFamily from '@ckeditor/ckeditor5-font/src/fontfamily';
+import {
+	ClassicEditor as ClassicEditorBase,
+	Plugin,
+	Essentials,
+	CKFinderUploadAdapter as UploadAdapter,
+	Autoformat,
+	Bold,
+	Italic,
+	BlockQuote,
+	CKFinder,
+	EasyImage,
+	Heading,
+	Image,
+	ImageCaption,
+	ImageStyle,
+	ImageToolbar,
+	ImageUpload,
+	ImageResize,
+	ImageInsert,
+	Base64UploadAdapter,
+	Indent,
+	IndentBlock,
+	Link,
+	List,
+	MediaEmbed,
+	Paragraph,
+	PasteFromOffice,
+	Table,
+	TableToolbar,
+	Alignment,
+	Font,
+	FontFamily,
+	CloudServices,
+} from 'ckeditor5';
 
-export default class ClassicEditor extends ClassicEditorBase {}
+import 'ckeditor5/ckeditor5.css';
+
+export default class ClassicEditor extends ClassicEditorBase {
+}
 
 // Create the NumRows plugin.
 /* eslint-disable space-in-parens, template-curly-spacing */
@@ -43,17 +50,20 @@ class NumRowsPlugin extends Plugin {
 	init() {
 		const numRows = parseInt(this.editor.config.get('rows'), 10);
 		if (numRows && typeof numRows === 'number' && isFinite(numRows)) {
-			const editorHeight = (numRows * 31) + 14;
+			const editorHeight = (
+				numRows * 31
+			) + 14;
 			this.editor.ui.view.editable.extendTemplate({
 				attributes: {
 					style: {
-						minHeight: `${editorHeight}px`
-					}
-				}
+						minHeight: `${editorHeight}px`,
+					},
+				},
 			});
 		}
 	}
 }
+
 /* eslint-enable space-in-parens, template-curly-spacing */
 
 // Plugins to include in the build.
@@ -75,6 +85,8 @@ ClassicEditor.builtinPlugins = [
 	ImageToolbar,
 	ImageUpload,
 	ImageResize,
+	ImageInsert,
+	Base64UploadAdapter,
 	Link,
 	List,
 	MediaEmbed,
@@ -85,11 +97,13 @@ ClassicEditor.builtinPlugins = [
 	Alignment,
 	Font,
 	FontFamily,
-	NumRowsPlugin
+	NumRowsPlugin,
+	CloudServices,
 ];
 
 // Editor configuration.
 ClassicEditor.defaultConfig = {
+	licenseKey: 'GPL',
 	toolbar: {
 		items: [
 			'heading',
@@ -113,27 +127,28 @@ ClassicEditor.defaultConfig = {
 			'alignment:right',
 			'alignment:center',
 			'undo',
-			'redo'
-		]
+			'redo',
+		],
 	},
 	image: {
 		toolbar: [
-			'imageStyle:full',
-			'imageStyle:side',
+			'toggleImageCaption',
+			'imageTextAlternative',
 			'|',
-			'imageTextAlternative'
+			'imageStyle:inline',
+			'imageStyle:wrapText',
+			'imageStyle:breakText',
+			'|',
+			'resizeImage'
 		],
 		upload: {
-			types: [ 'jpeg', 'png', 'gif', 'bmp', 'webp', 'tiff' ]
-		}
+			types: ['jpeg', 'png', 'gif', 'bmp', 'webp', 'tiff'],
+		},
 	},
 	table: {
 		contentToolbar: [
-			'tableColumn',
-			'tableRow',
-			'mergeTableCells'
-		]
-	},
-	// This value must be kept in sync with the language defined in webpack.config.js.
-	language: 'en'
+			'tableColumn', 'tableRow', 'mergeTableCells',
+		],
+	}, // This value must be kept in sync with the language defined in webpack.config.js.
+	language: 'en',
 };
