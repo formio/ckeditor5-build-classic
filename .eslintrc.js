@@ -8,5 +8,6 @@
 'use strict';
 
 module.exports = {
-	extends: 'ckeditor5'
+	extends: 'ckeditor5',
+	'comma-dangle': ['error', 'only-multiline'],
 };
