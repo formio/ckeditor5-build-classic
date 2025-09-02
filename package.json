@@ -74,6 +74,6 @@
     }
   },
   "dependencies": {
-    "ckeditor5": "^45.1.0"
+    "ckeditor5": "^46.0.0"
   }
 }
